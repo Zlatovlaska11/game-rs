@@ -1,3 +1,4 @@
+use std::time::{Duration, Instant};
 use std::{
     borrow::BorrowMut,
     cell::RefCell,
@@ -6,7 +7,7 @@ use std::{
 
 use bullets::bullets::Bullet;
 use lazy_static::lazy_static;
-use macroquad::{prelude::*, ui::root_ui};
+use macroquad::prelude::*;
 use miniquad::log;
 
 mod bullets;
@@ -24,34 +25,30 @@ lazy_static! {
     }));
 }
 
-pub fn update_game_obj() {
-    // Handle player input
+pub async fn update_game_obj() {
     {
         let game_obj = GAME_OBJ.lock().unwrap();
 
-        // Borrow player mutably
         let mut player = game_obj.player.borrow_mut();
 
-        // Borrow projectiles mutably
         let mut projectiles = game_obj.projectiles.borrow_mut();
 
-        // Call input_handle with a mutable reference to projectiles
         player.input_handle(&mut projectiles);
     }
 
-    // Draw player
     {
-        let mut game_oj = GAME_OBJ.lock().unwrap();
+        let game_oj = GAME_OBJ.lock().unwrap();
         game_oj.player.borrow_mut().draw();
     }
 
-    // Update projectiles
     {
-        let mut game_oj = GAME_OBJ.lock().unwrap();
+        let game_obj = GAME_OBJ.lock().unwrap();
+        let mut projectiles = game_obj.projectiles.borrow_mut();
+        for bullet in projectiles.iter_mut() {
+            if bullet.pos_x >= screen_width() {
 
-        let mut projectiles = game_oj.projectiles.borrow_mut();
-        for mut bullet in <Vec<Bullet> as Clone>::clone(&projectiles).into_iter() {
-            bullet.travel();
+            }
+            bullet.travel().await;
         }
     }
 }
@@ -71,10 +68,7 @@ async fn main() {
                 ..Default::default()
             },
         );
-        log!(log::Level::Error, "about to lock");
-        update_game_obj();
-
-        log!(log::Level::Error, "locked");
+        update_game_obj().await;
 
         next_frame().await
     }

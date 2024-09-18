@@ -1,11 +1,17 @@
 pub mod bullets {
     use macroquad::{
-        color::WHITE, shapes::draw_circle, time::get_frame_time, window::screen_width,
+        color::WHITE,
+        math::vec2,
+        miniquad::log,
+        prelude::animation::{AnimatedSprite, Animation},
+        shapes::draw_circle,
+        texture::{
+            draw_texture, draw_texture_ex, load_texture, DrawTextureParams, FilterMode, Texture2D,
+        },
+        time::get_frame_time,
     };
 
-    use crate::GameObjects;
-
-    #[derive(Debug, Clone)]
+    #[derive(Debug)]
     pub struct Bullet {
         velocity: f32,
         size: (f32, f32),
@@ -13,7 +19,7 @@ pub mod bullets {
         texture: String,
 
         pos_y: f32,
-        pos_x: f32,
+        pub pos_x: f32,
     }
 
     impl Bullet {
@@ -28,10 +34,23 @@ pub mod bullets {
             };
         }
 
-        pub fn travel(&mut self) {
-            self.pos_x += self.velocity * get_frame_time();
-            draw_circle(self.pos_x, self.pos_y, 10.0, WHITE);
+        pub async fn travel(&mut self) {
+            let bullet_texture: Texture2D = load_texture("fireball.png").await.unwrap();
+            bullet_texture.set_filter(FilterMode::Nearest);
+            self.pos_x += 10.0;
+
+            draw_texture_ex(
+                &bullet_texture,
+                self.pos_x,
+                self.pos_y,
+                WHITE,
+                DrawTextureParams {
+                    dest_size: Some(vec2(self.size.0, self.size.1)),
+                    ..Default::default()
+                },
+            );
+
+            //draw_texture(&bullet_texture, self.pos_x, self.pos_y, WHITE);
         }
     }
-
 }
