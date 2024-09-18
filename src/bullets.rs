@@ -2,13 +2,9 @@ pub mod bullets {
     use macroquad::{
         color::WHITE,
         math::vec2,
-        miniquad::log,
-        prelude::animation::{AnimatedSprite, Animation},
-        shapes::draw_circle,
         texture::{
-            draw_texture, draw_texture_ex, load_texture, DrawTextureParams, FilterMode, Texture2D,
+            draw_texture_ex, load_texture, DrawTextureParams, FilterMode, Texture2D,
         },
-        time::get_frame_time,
     };
 
     #[derive(Debug)]

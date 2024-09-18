@@ -1,14 +1,11 @@
-use std::time::{Duration, Instant};
 use std::{
     borrow::BorrowMut,
     cell::RefCell,
     sync::{Arc, Mutex},
 };
 
-use bullets::bullets::Bullet;
 use lazy_static::lazy_static;
 use macroquad::prelude::*;
-use miniquad::log;
 
 mod bullets;
 pub mod player;
@@ -46,10 +43,7 @@ pub async fn update_game_obj() {
         let mut projectiles = game_obj.projectiles.borrow_mut();
         projectiles.retain(|x| x.pos_x <= screen_width());
         for bullet in projectiles.iter_mut() {
-            if bullet.pos_x >= screen_width() {
-
-
-            }
+            if bullet.pos_x >= screen_width() {}
             bullet.travel().await;
         }
     }
@@ -58,18 +52,26 @@ pub async fn update_game_obj() {
 #[macroquad::main("2d Game")]
 async fn main() {
     set_pc_assets_folder("assets");
+    GAME_OBJ
+        .lock()
+        .unwrap()
+        .player
+        .borrow_mut()
+        .load_texture()
+        .await;
     let background = load_texture("background.png").await.unwrap();
     loop {
-        draw_texture_ex(
-            &background,
-            0.0,
-            0.0,
-            WHITE,
-            DrawTextureParams {
-                dest_size: Some(Vec2::new(screen_width(), screen_height())),
-                ..Default::default()
-            },
-        );
+        //draw_texture_ex(
+        //  &background,
+        //0.0,
+        //0.0,
+        //WHITE,
+        //DrawTextureParams {
+        //   dest_size: Some(Vec2::new(screen_width(), screen_height())),
+        //  ..Default::default()
+        //},
+        //);
+        clear_background(WHITE);
         update_game_obj().await;
 
         next_frame().await
