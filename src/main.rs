@@ -44,8 +44,10 @@ pub async fn update_game_obj() {
     {
         let game_obj = GAME_OBJ.lock().unwrap();
         let mut projectiles = game_obj.projectiles.borrow_mut();
+        projectiles.retain(|x| x.pos_x <= screen_width());
         for bullet in projectiles.iter_mut() {
             if bullet.pos_x >= screen_width() {
+
 
             }
             bullet.travel().await;

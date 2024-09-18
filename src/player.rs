@@ -7,7 +7,6 @@ pub mod player {
         color::GREEN,
         input::is_key_down,
         math::clamp,
-        miniquad::log,
         shapes::draw_rectangle,
         time::get_frame_time,
         window::{screen_height, screen_width},
@@ -70,7 +69,7 @@ pub mod player {
         pub fn new() -> Self {
             return Player {
                 last_shot: Instant::now(),
-                shooting_cooldown: Duration::from_millis(100),
+                shooting_cooldown: Duration::from_millis(500),
                 pos_x: 0.0,
                 pos_y: (screen_height() - 60.0).round(),
                 speed: 200.0,
