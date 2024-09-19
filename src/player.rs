@@ -31,6 +31,8 @@ pub mod player {
     impl Player {
         pub async fn load_texture(&mut self) {
             self.texture = Some(
+                // textures from https://axolotl-jim.itch.io/wizard-goose-sp the best shit i had
+                // found till this day! Thanks man
                 load_texture("Wizardgooseassets/duck_run.png")
                     .await
                     .unwrap(),
@@ -108,12 +110,12 @@ pub mod player {
                 let now = Instant::now();
 
                 if now.duration_since(self.last_shot) >= self.shooting_cooldown {
-                    let bullet = bullets::bullets::Bullet::new(self.pos_x + 64.0, self.pos_y + 64.0);
+                    let bullet =
+                        bullets::bullets::Bullet::new(self.pos_x + 64.0, self.pos_y + 64.0);
                     projectiles.push(bullet);
                     self.last_shot = now;
                 }
             }
-
 
             self.pos_x = clamp(self.pos_x, 0.0, screen_width() - 128.0);
             self.pos_y = clamp(self.pos_y, 0.0, screen_height() - 128.0);
@@ -136,6 +138,10 @@ pub mod player {
 
         pub fn pos_y(&self) -> f32 {
             self.pos_y
+        }
+
+        pub fn pos_x(&self) -> f32 {
+            self.pos_x
         }
     }
 }
